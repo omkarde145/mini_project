@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication | Campus Club Management</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .auth-wrapper {
+      min-height: calc(100vh - 4.25rem - 120px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 500px;
+    }
+    .demo-creds-box {
+      margin-top: 1.5rem;
+      background-color: var(--gray-50);
+      border: 1px dashed var(--gray-300);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      font-size: 0.8125rem;
+    }
+    .demo-pill {
+      display: inline-block;
+      margin: 0.2rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-family: monospace;
+    }
+    .demo-pill:hover {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="index.html" class="navbar-brand">
+        <div class="brand-icon">🎓</div>
+        <span>ClubHub</span>
+      </a>
+      <div class="navbar-actions">
+        <a href="index.html" class="btn btn-outline btn-sm">&larr; Back to Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Content -->
+  <main class="auth-wrapper">
+    <div class="card auth-card">
+      <!-- Tabs -->
+      <div class="card-header" style="padding-bottom: 0;">
+        <div class="tabs-nav" style="margin-bottom: 0; width: 100%;">
+          <button class="tab-btn active" id="tab-login-btn" style="flex: 1; text-align: center;">Sign In</button>
+          <button class="tab-btn" id="tab-register-btn" style="flex: 1; text-align: center;">Create Account</button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- Login Form -->
+        <div id="login-pane" class="tab-pane active">
+          <form id="login-form">
+            <div class="form-group">
+              <label class="form-label" for="login-email">Campus Email</label>
+              <input type="email" id="login-email" class="form-control" placeholder="name@campus.edu" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="login-password">Password</label>
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" id="login-submit-btn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 0.5rem;">
+              Sign In &rarr;
+            </button>
+          </form>
+
+          <!-- Quick Test Credentials Box -->
+          <div class="demo-creds-box">
+            <strong style="display: block; margin-bottom: 0.35rem; color: var(--dark);">⚡ Quick Demo Accounts (Click to Fill):</strong>
+            <div>
+              <span class="demo-pill" onclick="fillCreds('admin@campus.edu', 'password123')">🔑 Admin</span>
+              <span class="demo-pill" onclick="fillCreds('coding.lead@campus.edu', 'password123')">💻 Coordinator (Coding)</span>
+              <span class="demo-pill" onclick="fillCreds('arts.lead@campus.edu', 'password123')">🎨 Coordinator (Arts)</span>
+              <span class="demo-pill" onclick="fillCreds('student1@campus.edu', 'password123')">🎒 Student (Sarah)</span>
+            </div>
+            <div style="margin-top: 0.4rem; color: var(--gray-500);">All accounts use password: <code>password123</code></div>
+          </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-pane" class="tab-pane">
+          <form id="register-form">
+            <div class="form-group">
+              <label class="form-label" for="reg-name">Full Name</label>
+              <input type="text" id="reg-name" class="form-control" placeholder="Jane Doe" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-email">Campus Email</label>
+              <input type="email" id="reg-email" class="form-control" placeholder="jane@campus.edu" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Password</label>
+              <input type="password" id="reg-password" class="form-control" placeholder="At least 6 characters" minlength="6" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-role">Role</label>
+              <select id="reg-role" class="form-select">
+                <option value="student">Student (Join & Participate)</option>
+                <option value="coordinator">Club Coordinator (Manage Club)</option>
+              </select>
+            </div>
+
+            <div class="grid-2" style="gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label" for="reg-dept">Department</label>
+                <input type="text" id="reg-dept" class="form-control" placeholder="e.g. Computer Science">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="reg-studentid">Student ID</label>
+                <input type="text" id="reg-studentid" class="form-control" placeholder="e.g. STU-2024-501">
+              </div>
+            </div>
+
+            <!-- Coordinator-specific fields (Hidden for Students) -->
+            <div id="coordinator-specific-fields" style="display: none; padding-top: 0.5rem; border-top: 1px dashed var(--border); margin-top: 0.5rem;">
+              <h4 style="font-size: 0.9375rem; margin-bottom: 0.75rem; color: var(--primary);">Proposed Club Registration:</h4>
+              <div class="form-group">
+                <label class="form-label" for="reg-club-name">Club Name</label>
+                <input type="text" id="reg-club-name" class="form-control" placeholder="e.g. Artificial Intelligence Chapter">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="reg-club-cat">Category</label>
+                <select id="reg-club-cat" class="form-select">
+                  <option value="Technology">Technology</option>
+                  <option value="Arts & Culture">Arts & Culture</option>
+                  <option value="Music">Music</option>
+                  <option value="Environment">Environment</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Sports">Sports</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="reg-club-desc">Brief Club Mission</label>
+                <textarea id="reg-club-desc" class="form-control" placeholder="State your proposed club purpose..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" id="reg-submit-btn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 0.75rem;">
+              Create Account &rarr;
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Tab switching
+    const loginTabBtn = document.getElementById('tab-login-btn');
+    const regTabBtn = document.getElementById('tab-register-btn');
+    const loginPane = document.getElementById('login-pane');
+    const regPane = document.getElementById('register-pane');
+
+    function activateTab(tab) {
+      if (tab === 'register') {
+        loginTabBtn.classList.remove('active');
+        regTabBtn.classList.add('active');
+        loginPane.classList.remove('active');
+        regPane.classList.add('active');
+      } else {
+        regTabBtn.classList.remove('active');
+        loginTabBtn.classList.add('active');
+        regPane.classList.remove('active');
+        loginPane.classList.add('active');
+      }
+    }
+
+    loginTabBtn.addEventListener('click', () => activateTab('login'));
+    regTabBtn.addEventListener('click', () => activateTab('register'));
+
+    // Check URL params (?tab=register)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('tab') === 'register') {
+      activateTab('register');
+    }
+
+    // Role toggle for coordinator extra fields
+    const roleSelect = document.getElementById('reg-role');
+    const coordFields = document.getElementById('coordinator-specific-fields');
+    roleSelect.addEventListener('change', () => {
+      coordFields.style.display = roleSelect.value === 'coordinator' ? 'block' : 'none';
+    });
+
+    // Fill credentials helper
+    function fillCreds(email, password) {
+      document.getElementById('login-email').value = email;
+      document.getElementById('login-password').value = password;
+      activateTab('login');
+    }
+
+    // Login Form Submit
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-submit-btn');
+
+      btn.disabled = true;
+      btn.textContent = 'Authenticating...';
+
+      try {
+        const res = await apiRequest('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+
+        if (res.success) {
+          Auth.setSession(res.token, res.user, res.club);
+          showToast(`Welcome back, ${res.user.full_name}!`, 'success');
+          setTimeout(() => {
+            window.location.href = Auth.getDashboardUrl(res.user.role);
+          }, 600);
+        }
+      } catch (err) {
+        showToast(err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Sign In →';
+      }
+    });
+
+    // Register Form Submit
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const role = document.getElementById('reg-role').value;
+      const payload = {
+        full_name: document.getElementById('reg-name').value.trim(),
+        email: document.getElementById('reg-email').value.trim(),
+        password: document.getElementById('reg-password').value,
+        role: role,
+        department: document.getElementById('reg-dept').value.trim(),
+        student_id: document.getElementById('reg-studentid').value.trim()
+      };
+
+      if (role === 'coordinator') {
+        payload.club_name = document.getElementById('reg-club-name').value.trim();
+        payload.club_category = document.getElementById('reg-club-cat').value;
+        payload.club_description = document.getElementById('reg-club-desc').value.trim();
+      }
+
+      const btn = document.getElementById('reg-submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Creating Account...';
+
+      try {
+        const res = await apiRequest('/auth/register', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        if (res.success) {
+          Auth.setSession(res.token, res.user, res.club);
+          showToast('Account created successfully!', 'success');
+          setTimeout(() => {
+            window.location.href = Auth.getDashboardUrl(res.user.role);
+          }, 800);
+        }
+      } catch (err) {
+        showToast(err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Create Account →';
+      }
+    });
+  </script>
+</body>
+</html>

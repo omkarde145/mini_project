@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Club Management System | Discover, Join & Lead</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="index.html" class="navbar-brand">
+        <div class="brand-icon">🎓</div>
+        <span>ClubHub</span>
+      </a>
+
+      <nav>
+        <ul class="navbar-nav">
+          <li><a href="index.html" class="nav-link active">Explore Clubs</a></li>
+          <li><a href="#about-section" class="nav-link">About</a></li>
+        </ul>
+      </nav>
+
+      <div class="navbar-actions" id="navbar-auth-actions">
+        <!-- Rendered dynamically by auth.js -->
+        <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+        <a href="login.html?tab=register" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Find Your Tribe on Campus</h1>
+      <p>Connect with student organizations, discover hackathons, creative workshops, and leadership opportunities that shape your collegiate journey.</p>
+      
+      <div class="hero-search-bar">
+        <input type="text" id="search-input" placeholder="Search clubs by name, category, or keyword...">
+        <button id="search-btn">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Exploration Section -->
+  <main class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+    <!-- Filter Bar -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+      <div>
+        <h2>Explore Campus Clubs</h2>
+        <p>Browse accredited student chapters and organizations</p>
+      </div>
+      <div>
+        <span class="badge badge-category" id="club-count-badge">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Category Chips -->
+    <div class="category-filters" id="category-filters">
+      <button class="filter-chip active" data-category="all">All Clubs</button>
+      <button class="filter-chip" data-category="Technology">Technology</button>
+      <button class="filter-chip" data-category="Arts & Culture">Arts & Culture</button>
+      <button class="filter-chip" data-category="Music">Music</button>
+      <button class="filter-chip" data-category="Environment">Environment</button>
+    </div>
+
+    <!-- Clubs Grid -->
+    <div class="club-grid" id="club-grid">
+      <!-- Populated dynamically via main.js -->
+    </div>
+
+    <!-- Highlights Section -->
+    <section id="about-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border);">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h2>Everything You Need to Manage Student Life</h2>
+        <p>Built with role-based access for students, club leaders, and campus administrators</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card" style="padding: 2rem; text-align: center;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚀</div>
+          <h3>For Students</h3>
+          <p style="margin-top: 0.5rem; font-size: 0.9375rem;">
+            Discover clubs, apply with one click, track membership approvals in real-time, and get tailored event calendars.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 2rem; text-align: center;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚡</div>
+          <h3>For Coordinators</h3>
+          <p style="margin-top: 0.5rem; font-size: 0.9375rem;">
+            Approve applicant rosters, broadcast club notices, publish upcoming workshops, and manage your member registry.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 2rem; text-align: center;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🛡️</div>
+          <h3>For Administrators</h3>
+          <p style="margin-top: 0.5rem; font-size: 0.9375rem;">
+            Full oversight of student body involvement, review newly registered student chapters, and enforce role security.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">🎓 ClubHub Campus System</div>
+        <div class="footer-links">
+          <a href="index.html">Clubs Directory</a>
+          <a href="login.html">Portal Login</a>
+          <a href="pages/student-dashboard.html">Student Desk</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 Campus Club Management System. Fully functional and reproducible full-stack project.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

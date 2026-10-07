@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club Details | Campus Club Management</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="../index.html" class="navbar-brand">
+        <div class="brand-icon">🎓</div>
+        <span>ClubHub</span>
+      </a>
+
+      <nav>
+        <ul class="navbar-nav">
+          <li><a href="../index.html" class="nav-link">Explore Clubs</a></li>
+        </ul>
+      </nav>
+
+      <div class="navbar-actions" id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    <!-- Breadcrumb -->
+    <div style="margin-bottom: 1.25rem;">
+      <a href="../index.html" style="font-size: 0.875rem; color: var(--gray-600);">&larr; Back to all clubs</a>
+    </div>
+
+    <!-- Club Hero Banner -->
+    <div class="club-detail-hero">
+      <img id="detail-banner-img" src="" alt="Club Banner">
+      <div class="club-detail-overlay">
+        <div>
+          <span class="badge badge-category" id="detail-category-badge" style="margin-bottom: 0.5rem;">Category</span>
+          <h1 id="detail-club-name">Loading Club...</h1>
+          <p id="detail-coord-contact" style="color: var(--gray-300); font-size: 0.875rem;">Coordinator: Loading...</p>
+        </div>
+        <div id="join-action-container">
+          <!-- Dynamic join button injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Club Content Tabs & Layout -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
+      
+      <!-- Left Column: Details, Events & Announcements -->
+      <div>
+        <div class="card" style="margin-bottom: 2rem; padding: 1.75rem;">
+          <h3 style="margin-bottom: 0.75rem;">About the Club</h3>
+          <p id="detail-description" style="font-size: 0.95rem; line-height: 1.7; color: var(--gray-700);"></p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-target="tab-announcements">Announcements</button>
+          <button class="tab-btn" data-target="tab-upcoming">Upcoming Events</button>
+          <button class="tab-btn" data-target="tab-past">Past Events</button>
+        </div>
+
+        <!-- Tab 1: Announcements -->
+        <div class="tab-pane active" id="tab-announcements">
+          <div id="announcements-container">
+            <p style="color: var(--gray-500);">Loading announcements...</p>
+          </div>
+        </div>
+
+        <!-- Tab 2: Upcoming Events -->
+        <div class="tab-pane" id="tab-upcoming">
+          <div id="upcoming-events-container">
+            <p style="color: var(--gray-500);">Loading upcoming events...</p>
+          </div>
+        </div>
+
+        <!-- Tab 3: Past Events -->
+        <div class="tab-pane" id="tab-past">
+          <div id="past-events-container">
+            <p style="color: var(--gray-500);">Loading past events...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Quick Stats & Leadership Card -->
+      <div>
+        <div class="card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h4 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Club Overview</h4>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span style="color: var(--gray-600); font-size: 0.875rem;">Total Members</span>
+            <strong id="detail-member-count">0</strong>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span style="color: var(--gray-600); font-size: 0.875rem;">Scheduled Events</span>
+            <strong id="detail-event-count">0</strong>
+          </div>
+
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--gray-600); font-size: 0.875rem;">Category</span>
+            <span class="badge badge-category" id="detail-category-pill">Category</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 1.5rem;">
+          <h4 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Coordinator Contact</h4>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="user-avatar" id="coord-avatar">C</div>
+            <div>
+              <strong id="coord-name" style="display: block; font-size: 0.9375rem;">Coordinator Name</strong>
+              <span id="coord-email" style="font-size: 0.8125rem; color: var(--gray-500);">email@campus.edu</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const clubId = urlParams.get('id');
+
+      if (!clubId) {
+        showToast('No club ID specified', 'error');
+        setTimeout(() => window.location.href = '../index.html', 1000);
+        return;
+      }
+
+      const bannerImg = document.getElementById('detail-banner-img');
+      const catBadge = document.getElementById('detail-category-badge');
+      const catPill = document.getElementById('detail-category-pill');
+      const clubNameEl = document.getElementById('detail-club-name');
+      const coordContactEl = document.getElementById('detail-coord-contact');
+      const descEl = document.getElementById('detail-description');
+      const memberCountEl = document.getElementById('detail-member-count');
+      const eventCountEl = document.getElementById('detail-event-count');
+      const coordAvatar = document.getElementById('coord-avatar');
+      const coordName = document.getElementById('coord-name');
+      const coordEmail = document.getElementById('coord-email');
+      const joinContainer = document.getElementById('join-action-container');
+
+      const announcementsContainer = document.getElementById('announcements-container');
+      const upcomingContainer = document.getElementById('upcoming-events-container');
+      const pastContainer = document.getElementById('past-events-container');
+
+      async function loadClubDetails() {
+        try {
+          const data = await apiRequest(`/student/clubs/${clubId}`);
+          if (!data.success) throw new Error(data.message);
+
+          const club = data.club;
+          const membership = data.membership;
+          const user = Auth.getUser();
+
+          // Render metadata
+          clubNameEl.textContent = club.name;
+          catBadge.textContent = club.category;
+          catPill.textContent = club.category;
+          descEl.textContent = club.description;
+          memberCountEl.textContent = club.member_count || 0;
+          eventCountEl.textContent = club.event_count || 0;
+
+          const defaultBanner = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&auto=format&fit=crop&q=80';
+          bannerImg.src = club.banner_url || defaultBanner;
+
+          if (club.coordinator_name) {
+            coordContactEl.textContent = `Lead: ${club.coordinator_name} (${club.coordinator_email})`;
+            coordName.textContent = club.coordinator_name;
+            coordEmail.textContent = club.coordinator_email;
+            coordAvatar.textContent = club.coordinator_name.charAt(0);
+          } else {
+            coordContactEl.textContent = 'Coordinator: Pending Assignment';
+            coordName.textContent = 'Unassigned';
+            coordEmail.textContent = 'contact@campus.edu';
+          }
+
+          // Render Join Action Button
+          if (!Auth.isAuthenticated()) {
+            joinContainer.innerHTML = `
+              <a href="../login.html" class="btn btn-primary btn-lg">Sign In to Join Club</a>
+            `;
+          } else if (user.role === 'student') {
+            if (!membership) {
+              joinContainer.innerHTML = `
+                <button id="join-club-btn" class="btn btn-primary btn-lg">Join Club &rarr;</button>
+              `;
+              document.getElementById('join-club-btn').addEventListener('click', handleJoinClub);
+            } else if (membership.status === 'pending') {
+              joinContainer.innerHTML = `
+                <span class="badge badge-pending" style="font-size: 0.9375rem; padding: 0.5rem 1rem;">
+                  ⏳ Membership Pending Review
+                </span>
+              `;
+            } else if (membership.status === 'approved') {
+              joinContainer.innerHTML = `
+                <span class="badge badge-approved" style="font-size: 0.9375rem; padding: 0.5rem 1rem;">
+                  ✅ Official Club Member
+                </span>
+              `;
+            } else if (membership.status === 'rejected') {
+              joinContainer.innerHTML = `
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <span class="badge badge-rejected" style="font-size: 0.875rem; padding: 0.4rem 0.8rem;">Application Rejected</span>
+                  <button id="reapply-club-btn" class="btn btn-outline btn-sm">Re-apply</button>
+                </div>
+              `;
+              document.getElementById('reapply-club-btn').addEventListener('click', handleJoinClub);
+            }
+          } else {
+            joinContainer.innerHTML = `
+              <span class="badge badge-role" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                Viewing as ${user.role}
+              </span>
+            `;
+          }
+
+          // Render Announcements
+          if (!data.announcements || data.announcements.length === 0) {
+            announcementsContainer.innerHTML = '<div class="empty-state"><p>No announcements posted yet.</p></div>';
+          } else {
+            announcementsContainer.innerHTML = data.announcements.map(ann => `
+              <div class="item-card">
+                <div class="item-details">
+                  <div class="item-meta">
+                    <span>🕒 Posted on ${formatDate(ann.posted_at)}</span>
+                  </div>
+                  <h4 class="item-title">${ann.title}</h4>
+                  <p class="item-content">${ann.content}</p>
+                </div>
+              </div>
+            `).join('');
+          }
+
+          // Render Upcoming Events
+          if (!data.upcoming_events || data.upcoming_events.length === 0) {
+            upcomingContainer.innerHTML = '<div class="empty-state"><p>No upcoming events currently scheduled.</p></div>';
+          } else {
+            upcomingContainer.innerHTML = data.upcoming_events.map(evt => `
+              <div class="item-card">
+                <div class="item-date-badge">
+                  <div class="day">${getDayNumber(evt.event_date)}</div>
+                  <div class="month">${getMonthShort(evt.event_date)}</div>
+                </div>
+                <div class="item-details">
+                  <h4 class="item-title">${evt.title}</h4>
+                  <div class="item-meta">
+                    <span>📍 ${evt.location}</span>
+                    <span>⏰ ${formatDateTime(evt.event_date)}</span>
+                  </div>
+                  <p class="item-content">${evt.description}</p>
+                </div>
+              </div>
+            `).join('');
+          }
+
+          // Render Past Events
+          if (!data.past_events || data.past_events.length === 0) {
+            pastContainer.innerHTML = '<div class="empty-state"><p>No past event records found.</p></div>';
+          } else {
+            pastContainer.innerHTML = data.past_events.map(evt => `
+              <div class="item-card" style="opacity: 0.8;">
+                <div class="item-date-badge" style="background-color: var(--gray-200); color: var(--gray-700);">
+                  <div class="day">${getDayNumber(evt.event_date)}</div>
+                  <div class="month">${getMonthShort(evt.event_date)}</div>
+                </div>
+                <div class="item-details">
+                  <h4 class="item-title">${evt.title}</h4>
+                  <div class="item-meta">
+                    <span>📍 ${evt.location}</span>
+                    <span>⏰ Concluded on ${formatDate(evt.event_date)}</span>
+                  </div>
+                  <p class="item-content">${evt.description}</p>
+                </div>
+              </div>
+            `).join('');
+          }
+
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      }
+
+      async function handleJoinClub() {
+        try {
+          const res = await apiRequest(`/student/clubs/${clubId}/join`, { method: 'POST' });
+          if (res.success) {
+            showToast('Membership request sent! Waiting for coordinator review.', 'success');
+            loadClubDetails();
+          }
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      }
+
+      // Tab switching
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+          e.target.classList.add('active');
+          const target = document.getElementById(e.target.dataset.target);
+          if (target) target.classList.add('active');
+        });
+      });
+
+      loadClubDetails();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordinator Portal | Campus Club Management</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="../index.html" class="navbar-brand">
+        <div class="brand-icon">🎓</div>
+        <span>ClubHub</span>
+      </a>
+
+      <nav>
+        <ul class="navbar-nav">
+          <li><a href="../index.html" class="nav-link">Explore Clubs</a></li>
+          <li><a href="coordinator-dashboard.html" class="nav-link active">Coordinator Desk</a></li>
+        </ul>
+      </nav>
+
+      <div class="navbar-actions" id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <!-- Dashboard Container -->
+  <main class="container" style="padding-bottom: 4rem;">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="dashboard-title-area">
+        <h1><span id="coordinator-club-name">Loading Club...</span></h1>
+        <div class="dashboard-subtitle">
+          Category: <span class="badge badge-category" id="coordinator-club-category">Category</span> • Lead Coordinator Management Console
+        </div>
+      </div>
+      <div class="dashboard-actions">
+        <button class="btn btn-outline btn-sm" onclick="openModal('edit-club-modal')">⚙️ Club Settings</button>
+        <button class="btn btn-primary btn-sm" onclick="openEditEventModal(null)">➕ New Event</button>
+        <button class="btn btn-secondary btn-sm" onclick="openEditAnnouncementModal(null)">📢 Post Notice</button>
+      </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon green">👥</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-members">0</div>
+          <div class="stat-label">Active Members</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon amber">📥</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon blue">📅</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-events">0</div>
+          <div class="stat-label">Scheduled Events</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📢</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-announcements">0</div>
+          <div class="stat-label">Announcements</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Nav -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-target="tab-requests">Pending Requests</button>
+      <button class="tab-btn" data-target="tab-roster">Member Roster</button>
+      <button class="tab-btn" data-target="tab-events">Manage Events</button>
+      <button class="tab-btn" data-target="tab-announcements">Manage Announcements</button>
+    </div>
+
+    <!-- Tab 1: Pending Join Requests -->
+    <div class="tab-pane active" id="tab-requests">
+      <div class="card">
+        <div class="card-header">
+          <h3 style="font-size: 1.15rem;">Review Student Membership Applications</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Applicant Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Applied Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="requests-tbody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 2rem;">Loading applications...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Member Roster -->
+    <div class="tab-pane" id="tab-roster">
+      <div class="card">
+        <div class="card-header">
+          <h3 style="font-size: 1.15rem;">Approved Active Members</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Member Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Joined Date</th>
+                <th>Roster Action</th>
+              </tr>
+            </thead>
+            <tbody id="members-tbody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 2rem;">Loading roster...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Events -->
+    <div class="tab-pane" id="tab-events">
+      <div class="card" style="padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.15rem;">Club Events & Workshops</h3>
+          <button class="btn btn-primary btn-sm" onclick="openEditEventModal(null)">➕ Add Event</button>
+        </div>
+        <div id="coordinator-events-list">
+          <p style="color: var(--gray-500);">Loading events...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Announcements -->
+    <div class="tab-pane" id="tab-announcements">
+      <div class="card" style="padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.15rem;">Club Broadcasts & Announcements</h3>
+          <button class="btn btn-primary btn-sm" onclick="openEditAnnouncementModal(null)">➕ Post Announcement</button>
+        </div>
+        <div id="coordinator-announcements-list">
+          <p style="color: var(--gray-500);">Loading announcements...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal: Edit Club Profile -->
+  <div class="modal-backdrop" id="edit-club-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Club Profile</h3>
+        <button class="modal-close" onclick="closeModal('edit-club-modal')">&times;</button>
+      </div>
+      <form id="edit-club-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="edit-club-name">Club Name</label>
+            <input type="text" id="edit-club-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-club-category">Category</label>
+            <input type="text" id="edit-club-category" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-club-banner">Banner Image URL</label>
+            <input type="url" id="edit-club-banner" class="form-control" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-club-desc">Description</label>
+            <textarea id="edit-club-desc" class="form-control" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('edit-club-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create / Edit Event -->
+  <div class="modal-backdrop" id="event-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="event-modal-title">Create New Event</h3>
+        <button class="modal-close" onclick="closeModal('event-modal')">&times;</button>
+      </div>
+      <form id="event-form">
+        <input type="hidden" id="event-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="event-title">Event Title</label>
+            <input type="text" id="event-title" class="form-control" placeholder="e.g. Annual Hackathon" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="event-location">Location / Venue</label>
+            <input type="text" id="event-location" class="form-control" placeholder="e.g. Hall 301 or Online" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="event-date">Date & Time</label>
+            <input type="datetime-local" id="event-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="event-desc">Event Description</label>
+            <textarea id="event-desc" class="form-control" rows="3" placeholder="Provide schedule and requirements..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('event-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create / Edit Announcement -->
+  <div class="modal-backdrop" id="announcement-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="announcement-modal-title">Post Announcement</h3>
+        <button class="modal-close" onclick="closeModal('announcement-modal')">&times;</button>
+      </div>
+      <form id="announcement-form">
+        <input type="hidden" id="announcement-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="announcement-title">Announcement Title</label>
+            <input type="text" id="announcement-title" class="form-control" placeholder="Important update..." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="announcement-content">Content</label>
+            <textarea id="announcement-content" class="form-control" rows="4" placeholder="Write message to club members..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('announcement-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Announcement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/coordinator.js"></script>
+</body>
+</html>

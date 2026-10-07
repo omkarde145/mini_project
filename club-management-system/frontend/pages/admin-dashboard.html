@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Oversight Console | Campus Club Management</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="../index.html" class="navbar-brand">
+        <div class="brand-icon">🎓</div>
+        <span>ClubHub</span>
+      </a>
+
+      <nav>
+        <ul class="navbar-nav">
+          <li><a href="../index.html" class="nav-link">Explore Clubs</a></li>
+          <li><a href="admin-dashboard.html" class="nav-link active">Admin Console</a></li>
+        </ul>
+      </nav>
+
+      <div class="navbar-actions" id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <!-- Dashboard Container -->
+  <main class="container" style="padding-bottom: 4rem;">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="dashboard-title-area">
+        <h1>Platform Administration Console 🛡️</h1>
+        <div class="dashboard-subtitle">Comprehensive campus analytics, club verification, and user management.</div>
+      </div>
+      <div class="dashboard-actions">
+        <button class="btn btn-primary btn-sm" onclick="openModal('create-club-modal')">➕ Register New Club</button>
+      </div>
+    </div>
+
+    <!-- Overview Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">🏛️</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-total-clubs">0</div>
+          <div class="stat-label">Total Clubs</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon amber">⏳</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-pending-clubs">0</div>
+          <div class="stat-label">Clubs Pending Approval</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">🎓</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-students">0</div>
+          <div class="stat-label">Registered Students</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👔</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-coordinators">0</div>
+          <div class="stat-label">Club Coordinators</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon blue">📅</div>
+        <div class="stat-data">
+          <div class="stat-value" id="stat-events">0</div>
+          <div class="stat-label">Total Events</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-target="tab-pending-clubs">Club Approvals</button>
+      <button class="tab-btn" data-target="tab-all-clubs">All Clubs Directory</button>
+      <button class="tab-btn" data-target="tab-users">User Administration</button>
+    </div>
+
+    <!-- Tab 1: Pending Club Approvals -->
+    <div class="tab-pane active" id="tab-pending-clubs">
+      <div class="card">
+        <div class="card-header">
+          <h3 style="font-size: 1.15rem;">Review Newly Registered Clubs</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Club Name</th>
+                <th>Category</th>
+                <th>Coordinator</th>
+                <th>Submission Date</th>
+                <th>Verification Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pending-clubs-tbody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 2rem;">Loading pending clubs...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: All Clubs Directory -->
+    <div class="tab-pane" id="tab-all-clubs">
+      <div class="card">
+        <div class="card-header">
+          <h3 style="font-size: 1.15rem;">Campus Clubs Master Registry</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Club Name</th>
+                <th>Category</th>
+                <th>Lead Coordinator</th>
+                <th>Members</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="all-clubs-tbody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem;">Loading clubs directory...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: User Management -->
+    <div class="tab-pane" id="tab-users">
+      <div class="card">
+        <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+          <h3 style="font-size: 1.15rem;">System User Accounts</h3>
+          
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <input type="text" id="user-search" class="form-control" placeholder="Search by name, email, or ID..." style="width: 250px;">
+            <select id="user-role-filter" class="form-select" style="width: 150px;">
+              <option value="">All Roles</option>
+              <option value="student">Student</option>
+              <option value="coordinator">Coordinator</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>User Details</th>
+                <th>System Role</th>
+                <th>Department</th>
+                <th>Student ID</th>
+                <th>Account Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem;">Loading users...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal: Create New Club Directly -->
+  <div class="modal-backdrop" id="create-club-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Register New Campus Club</h3>
+        <button class="modal-close" onclick="closeModal('create-club-modal')">&times;</button>
+      </div>
+      <form id="create-club-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="new-club-name">Club Name</label>
+            <input type="text" id="new-club-name" class="form-control" placeholder="e.g. Astronomy & Space Guild" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-club-category">Category</label>
+            <input type="text" id="new-club-category" class="form-control" placeholder="e.g. Science & Space" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-club-coordinator">Assign Lead Coordinator</label>
+            <select id="new-club-coordinator" class="form-select">
+              <option value="">Loading coordinators...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-club-banner">Banner Image URL</label>
+            <input type="url" id="new-club-banner" class="form-control" placeholder="https://images.unsplash.com/...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-club-desc">Description</label>
+            <textarea id="new-club-desc" class="form-control" rows="3" placeholder="State club mission and objectives..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('create-club-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create & Activate Club</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>
